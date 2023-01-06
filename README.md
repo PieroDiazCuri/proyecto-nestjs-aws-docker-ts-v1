@@ -1,1 +1,1 @@
-Proyecto v1.0.0
+Proyecto v 1.0.0
