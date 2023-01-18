@@ -1,4 +1,4 @@
-//readonly se utiliza para que la propiedad solo pueda ser seteada dentro del constructor
+//readonly se utiliza para que la propiedad solo pueda ser seteada(modificada) dentro del constructor
 class Student {
   private readonly id: number = 0;
   private readonly email: string = '';

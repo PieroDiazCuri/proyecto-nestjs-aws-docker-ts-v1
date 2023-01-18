@@ -18,7 +18,7 @@ console.log('URL: ', Service.getUrl());
 //Tambien se puede instanciar
 const service = new Service();
 console.log('URL API: ', service.getUrlApi());
-
+//tambien se puede usar una propiedad de la clase asi no sea del constructor heredado
 class CouseIdInvalidException extends Error {
   constructor() {
     super(CouseIdInvalidException.getMessage());
