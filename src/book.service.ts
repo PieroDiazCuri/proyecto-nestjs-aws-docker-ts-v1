@@ -1,14 +1,16 @@
 import { NotFoundException } from '@nestjs/common';
+import { DatabaseEntityManager } from './database.manager';
 import { BookCreateDTO } from './dtos/book.create.dto';
+import { BookEntity } from './entities/book.entity';
 
 const dataBook: BookCreateDTO[] = [
   { title: 'titulo 1', author: 'author 1' },
   { title: 'titulo 2', author: 'author 2' },
   { title: 'titulo 3', author: 'author 3' },
 ];
-export class BookService {
-  getBook() {
-    return dataBook;
+export class BookService extends DatabaseEntityManager {
+  async getBook(): Promise<BookEntity[]> {
+    return await this.manager.getRepository(BookEntity).find();
   }
   getBookId(id: number) {
     if (id >= dataBook.length) {
@@ -16,14 +18,18 @@ export class BookService {
     }
     return dataBook[id];
   }
-  insertBook(body: BookCreateDTO) {
-    dataBook.push(body);
+  async insertBook(body: BookCreateDTO) {
+    await this.manager.getRepository(BookEntity).save(body);
     return body;
   }
-  removeBook(id: number) {
-    if (id >= dataBook.length) {
+  async removeBook(id: number) {
+    const book = await this.manager
+      .getRepository(BookEntity)
+      .findOne({ where: { id } });
+    if (!book) {
       throw new NotFoundException('Book not found');
     }
-    return dataBook.splice(id, 1);
+    await this.manager.getRepository(BookEntity).delete({ id });
+    return book;
   }
 }

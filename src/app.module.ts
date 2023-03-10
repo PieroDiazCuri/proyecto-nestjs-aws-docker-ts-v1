@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { BaseApplication, Price } from './base.service';
 import { BookController } from './book.controller';
 import { BookService } from './book.service';
+import { ParamsService } from './database/params.service';
 import { TaskService } from './task.service';
 
 export class TestDI {
@@ -15,6 +16,7 @@ export class TestDI {
   imports: [],
   controllers: [AppController, BookController],
   providers: [
+    ParamsService,
     AppService,
     BookService,
     {

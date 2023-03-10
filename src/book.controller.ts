@@ -19,8 +19,8 @@ export class BookController {
     this.bookService = bookService;
   }
   @Get('list')
-  getBook() {
-    return this.bookService.getBook();
+  async getBook() {
+    return await this.bookService.getBook();
   }
   @Get(':identificador')
   //   @UsePipes(new ValidationPipe()) // se usa en cada método
@@ -29,8 +29,8 @@ export class BookController {
     return this.bookService.getBookId(values.identificador);
   }
   @Post()
-  createBook(@Body() body: BookCreateDTO) {
-    return this.bookService.insertBook(body);
+  async createBook(@Body() body: BookCreateDTO) {
+    return await this.bookService.insertBook(body);
   }
   @Delete(':identificador')
   deleteBook(@Param() value: BookGetOneDTO) {
