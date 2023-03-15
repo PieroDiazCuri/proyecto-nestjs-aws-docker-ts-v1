@@ -3,6 +3,7 @@ import { AggregateRoot } from '@nestjs/cqrs';
 export type CourseEssencial = {
   readonly id: string;
   readonly name: string;
+  // no se colocan valores que no ingrese el estudiante
 };
 export type CourseOptional = {
   readonly summary: string;
