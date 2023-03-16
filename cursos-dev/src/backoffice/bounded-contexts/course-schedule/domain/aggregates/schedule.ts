@@ -1,7 +1,8 @@
 import { AggregateRoot } from '@nestjs/cqrs';
+import { Requeriment } from '../entities/requirement';
 
 export type ScheduleEsscencial = {
-  readonly id: string;
+  readonly scheduleId: string;
   readonly courseId: string;
   readonly subject: string;
   readonly status: string;
@@ -27,7 +28,7 @@ export type ScheduleUpdate = {
 export type ScheduleProperties = Required<ScheduleEsscencial> &
   Partial<ScheduleOptional>;
 export class Schedule extends AggregateRoot {
-  private readonly id: string;
+  private readonly scheduleId: string;
   private readonly courseId: string;
   private subject: string;
   private status: string;
@@ -41,6 +42,8 @@ export class Schedule extends AggregateRoot {
   private readonly createdAt: Date;
   private updatedAt: Date;
   private deletedAt: Date;
+  // acá se coloca las entidades que quieres llamar a traves de Schedule
+  readonly requeriments: Requeriment[] = [];
   constructor(properties: ScheduleProperties) {
     super();
     Object.assign(this, properties);
@@ -48,7 +51,7 @@ export class Schedule extends AggregateRoot {
   }
   properties() {
     return {
-      id: this.id,
+      scheduleId: this.scheduleId,
       courseId: this.courseId,
       subject: this.subject,
       duration: this.duration,
@@ -63,6 +66,13 @@ export class Schedule extends AggregateRoot {
       active: this.active,
       zoomId: this.zoomId,
     };
+  }
+  addRequirement(requirement: string) {
+    const newRequirement = new Requeriment({
+      scheduleId: this.scheduleId,
+      text: requirement,
+    });
+    this.requeriments.push(newRequirement);
   }
   update(fields: Partial<ScheduleUpdate>) {
     Object.assign(this, fields);
