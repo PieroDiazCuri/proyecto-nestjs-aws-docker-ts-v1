@@ -1,8 +1,11 @@
 import { AggregateRoot } from '@nestjs/cqrs';
+import { Goal } from '../entities/goal';
 import { Requeriment } from '../entities/requirement';
+import { Syllabus } from '../entities/syllabus';
+import { ScheduleVO } from '../value-objects/schedule-id.vo';
 
 export type ScheduleEsscencial = {
-  readonly scheduleId: string;
+  readonly scheduleId: ScheduleVO;
   readonly courseId: string;
   readonly subject: string;
   readonly status: string;
@@ -28,7 +31,7 @@ export type ScheduleUpdate = {
 export type ScheduleProperties = Required<ScheduleEsscencial> &
   Partial<ScheduleOptional>;
 export class Schedule extends AggregateRoot {
-  private readonly scheduleId: string;
+  private readonly scheduleId: ScheduleVO;
   private readonly courseId: string;
   private subject: string;
   private status: string;
@@ -43,7 +46,9 @@ export class Schedule extends AggregateRoot {
   private updatedAt: Date;
   private deletedAt: Date;
   // acá se coloca las entidades que quieres llamar a traves de Schedule
-  readonly requeriments: Requeriment[] = [];
+  private requeriments: Requeriment[] = [];
+  private goal: Goal[] = [];
+  private syllabus: Syllabus[] = [];
   constructor(properties: ScheduleProperties) {
     super();
     Object.assign(this, properties);
@@ -65,7 +70,21 @@ export class Schedule extends AggregateRoot {
       deletedAt: this.deletedAt,
       active: this.active,
       zoomId: this.zoomId,
+      requeriments: this.requeriments,
+      goal: this.goal,
+      syllabus: this.syllabus,
     };
+  }
+  addSyllabus(syllabus: string) {
+    const newSYLLABUS = new Syllabus({
+      scheduleId: this.scheduleId,
+      text: syllabus,
+    });
+    this.syllabus.push(newSYLLABUS);
+  }
+  addGoal(goal: string) {
+    const newGoal = new Goal({ scheduleId: this.scheduleId, text: goal });
+    this.goal.push(newGoal);
   }
   addRequirement(requirement: string) {
     const newRequirement = new Requeriment({
